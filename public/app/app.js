@@ -1,16 +1,19 @@
 // importamos a função explicitando a extensão .js
 // o que Anular ou React fazem automaticamente
 // por meio do Webpack
-import {handleStatus} from './utils/promise-helpers.js';
+import {handleStatus, log} from './utils/promise-helpers.js';
+import './utils/array-helpers.js';
+
+const sumItems = notas => notas
+.$flatMap(nota => nota.itens)
+.filter(item => item.codigo == '2143')
+.reduce((total, item) => total + item.valor, 0);
 
 document
 .querySelector('#myButton')
-.onclick = () => 
-fetch('http://localhost:3000/notas')
-.then(res => {
-    if(res.ok)
-        return res.json();
-    return Promise.reject(res.statusText);
-}).then(notas => console.log(notas))
-.catch(console.log);
+.onclick = () => fetch('http://localhost:3000/notas')
+.then(handleStatus)
+.then(sumItems)
+.then(log)
+.catch(log);
 
